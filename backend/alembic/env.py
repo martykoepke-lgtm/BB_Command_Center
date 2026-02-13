@@ -27,7 +27,10 @@ target_metadata = Base.metadata
 
 # Override sqlalchemy.url from settings
 settings = get_settings()
-config.set_main_option("sqlalchemy.url", settings.database_url)
+_alembic_url = settings.database_url
+if _alembic_url.startswith("postgresql://"):
+    _alembic_url = _alembic_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+config.set_main_option("sqlalchemy.url", _alembic_url)
 
 
 def run_migrations_offline() -> None:
