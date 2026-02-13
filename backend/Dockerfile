@@ -53,5 +53,5 @@ USER appuser
 
 EXPOSE 8000
 
-# Production: use $PORT if set (Railway), fallback to 8000
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 4 --access-log"]
+# Run migrations then start server — Railway injects $PORT at runtime
+CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 4 --access-log"]
