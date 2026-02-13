@@ -27,8 +27,13 @@ class Base(DeclarativeBase):
 
 settings = get_settings()
 
+# Railway provides postgresql:// but asyncpg needs postgresql+asyncpg://
+_db_url = settings.database_url
+if _db_url.startswith("postgresql://"):
+    _db_url = _db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+
 engine = create_async_engine(
-    settings.database_url,
+    _db_url,
     echo=settings.app_debug,
     pool_size=10,
     max_overflow=20,
