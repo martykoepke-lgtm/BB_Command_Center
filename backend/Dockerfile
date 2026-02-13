@@ -49,6 +49,9 @@ COPY --chown=appuser:appuser . .
 # Remove test/dev files from production image
 RUN rm -rf tests/ scripts/ pytest.ini .env.example
 
+# Create uploads dir writable by appuser (for local file storage)
+RUN mkdir -p /app/uploads && chown appuser:appuser /app/uploads
+
 USER appuser
 
 EXPOSE 8000
